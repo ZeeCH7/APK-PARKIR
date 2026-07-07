@@ -1,75 +1,24 @@
 import streamlit as st
 
-# --- 1. SETTING HALAMAN ---
+# --- 1. SETTING HALAMAN HALUS (LAYOUT LEBAR) ---
 st.set_page_config(page_title="XYZ Parkir — Kalkulator Biaya", layout="wide")
 
-# --- 2. SUNTIKAN CSS (VERSI AMAN ANTI-ERROR) ---
-# Kita pisah kodenya ke variabel tersendiri biar Streamlit Cloud gak pusing ngebacanya
-css_code = """
-<style>
-    /* Mengubah background utama jadi gelap */
-    .stApp {
-        background-color: #0d1b2a;
-        color: #ffffff;
-        font-family: 'Segoe UI', sans-serif;
-    }
-    
-    /* Mengubah styling untuk card input data */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background-color: #1b263b;
-        border-radius: 15px;
-        padding: 20px;
-        border: 1px solid #2e3d52;
-    }
-    
-    /* Mengubah gaya tombol Hitung & Cetak Struk */
-    div.stButton > button {
-        background-color: #00b4d8 !important;
-        color: #0d1b2a !important;
-        font-weight: bold !important;
-        font-size: 16px !important;
-        border-radius: 10px !important;
-        border: none !important;
-        height: 50px !important;
-        width: 100% !important;
-        transition: 0.3s;
-    }
-    div.stButton > button:hover {
-        background-color: #90e0ef !important;
-        box-shadow: 0px 0px 15px rgba(0, 180, 216, 0.6);
-    }
-    
-    /* Desain Struk Putih Gaya Kasir */
-    .struk-container {
-        background-color: #f8f9fa;
-        color: #212529;
-        padding: 25px;
-        border-radius: 4px;
-        font-family: 'Courier New', Courier, monospace;
-        box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
-        border-top: 5px dashed #ced4da;
-        border-bottom: 5px dashed #ced4da;
-    }
-</style>
-"""
-st.markdown(css_code, unsafe_allowed_html=True)
+# --- 2. HEADER APLIKASI ---
+st.title("🔵 PERUSAHAAN PARKIR XYZ")
+st.subheader("Sistem Perhitungan Parkir Otomatis")
+st.write("Masukkan data transaksi kendaraan untuk menghitung biaya parkir, denda, dan kembalian secara otomatis.")
+st.markdown("---")
 
-# --- 3. HERO HEADER ---
-st.markdown("<p style='color: #00b4d8; font-size: 13px; font-weight: bold; letter-spacing: 1px;'>🔵 PERUSAHAAN PARKIR XYZ • SISTEM OTOMATIS</p>", unsafe_allowed_html=True)
-st.markdown("<h1 style='font-size: 45px; margin-top: -10px;'>Biaya <span style='color: #00b4d8;'>Parkir</span></h1>", unsafe_allowed_html=True)
-st.markdown("<p style='color: #a3b18a; margin-top: -15px;'>Masukkan data transaksi kendaraan untuk menghitung biaya parkir, denda, dan kembalian secara otomatis.</p>", unsafe_allowed_html=True)
-st.markdown("<br>", unsafe_allowed_html=True)
-
-# --- 4. MEMBAGI LAYOUT: KIRI (INPUT) & KANAN (STRUK) ---
+# --- 3. MEMBAGI LAYOUT: KIRI (INPUT) & KANAN (STRUK) ---
 kolom_input, kolom_blank, kolom_struk = st.columns([5, 1, 5])
 
 with kolom_input:
-    st.markdown("<h4 style='color: #00b4d8; margin-bottom: 20px;'>INPUT TRANSAKSI</h4>", unsafe_allowed_html=True)
+    st.subheader("📋 INPUT TRANSAKSI")
     
-    # Mini info tarif di atas input
-    st.code("MTR: 3.000 / +1.000   |   MBL: 5.000 / +2.000   |   BUS: 10.000 / +5.000")
+    # Menampilkan info tarif biar rapi
+    st.info("💡 **INFO TARIF:**\n* **MTR (Motor):** Rp 3.000 (2 Jam Awal) | +Rp 1.000 /jam berikutnya\n* **MBL (Mobil):** Rp 5.000 (2 Jam Awal) | +Rp 2.000 /jam berikutnya\n* **BUS (Bus):** Rp 10.000 (2 Jam Awal) | +Rp 5.000 /jam berikutnya")
     
-    # Input field berjejer
+    # Input field nama dan nopol bersebelahan
     sub_col1, sub_col2 = st.columns(2)
     with sub_col1:
         nama = st.text_input("Nama pemilik :", value="Farhan")
@@ -78,7 +27,7 @@ with kolom_input:
         
     pilihan_jenis = st.selectbox("Jenis kendaraan :", ["MTR — Motor / Roda Dua", "MBL — Mobil / Roda Empat", "BUS — Bus / Kendaraan Besar"])
     
-    # Logika konversi selectbox ke variabel asli lu
+    # Logika konversi selectbox ke variabel rumus asli lu
     if "MTR" in pilihan_jenis:
         kode, jenis, tarif_awal, tarif_per_jam = "mtr", "Motor", 3000, 1000
     elif "MBL" in pilihan_jenis:
@@ -91,7 +40,7 @@ with kolom_input:
     hilang_input = st.radio("Tiket hilang?", ["Tidak", "Ya (+Rp 20.000)"], horizontal=True)
     denda = 20000 if "Ya" in hilang_input else 0
     
-    # Hitung biaya dasar parkir (LOGIKA ASLI LU)
+    # Hitung biaya dasar parkir (LOGIKA ASLI LU KAGAK BERUBAH)
     if durasi > 2:
         biaya_parkir = tarif_awal + ((durasi - 2) * tarif_per_jam)
     else:
@@ -102,43 +51,44 @@ with kolom_input:
     byr = st.number_input("Uang bayar :", min_value=0, step=1000, value=5000)
     kembalian = byr - total_bayar
 
-    # Tombol pemicu cetak struk
-    tombol_cetak = st.button("Hitung & Cetak Struk")
+    # Tombol utama bergaya Primary (warna biru bawaan streamlit)
+    tombol_cetak = st.button("🖨️ Hitung & Cetak Struk", type="primary", use_container_width=True)
 
-# --- 5. LOGIKA TAMPILAN STRUK DI KOLOM KANAN ---
+# --- 4. LOGIKA TAMPILAN STRUK DI KOLOM KANAN ---
 with kolom_struk:
+    st.subheader("🧾 NOTA / STRUK PEMBAYARAN")
+    
     if tombol_cetak or byr > 0:
-        # Template HTML Struk Kasir Putih
-        struk_html = f"""
-            <div class="struk-container">
-                <h3 style="text-align: center; margin-bottom: 5px; font-weight: bold; color: #212529;">STRUK PARKIR</h3>
-                <p style="text-align: center; font-size: 12px; margin-top: 0; color: #212529;">Perusahaan Parkir XYZ</p>
-                <p style="color: #212529;">------------------------------------------</p>
-                <p style="color: #212529;"><b>Nama pemilik</b>  <span style="float: right;">{nama}</span></p>
-                <p style="color: #212529;"><b>No. polisi</b>   <span style="float: right;">{nopol}</span></p>
-                <p style="color: #212529;"><b>Kode</b>         <span style="float: right;">{kode.upper()}</span></p>
-                <p style="color: #212529;"><b>Jenis kendaraan</b> <span style="float: right;">{jenis}</span></p>
-                <p style="color: #212529;"><b>Durasi parkir</b> <span style="float: right;">{durasi} jam</span></p>
-                <p style="color: #212529;">------------------------------------------</p>
-                <p style="color: #212529;"><b>Biaya parkir</b>  <span style="float: right;">Rp {biaya_parkir:,}</span></p>
-                <p style="color: #212529;"><b>Denda tiket</b>   <span style="float: right;">Rp {denda:,}</span></p>
-                <p style="color: #212529;">------------------------------------------</p>
-                <h4 style="margin: 10px 0; color: #212529;"><b>TOTAL BAYAR</b> <span style="float: right;"><b>Rp {total_bayar:,}</b></span></h4>
-                <p style="color: #212529;"><b>Uang bayar</b>    <span style="float: right;">Rp {byr:,}</span></p>
-                <p style="color: #212529;"><b>Uang kembali</b>  <span style="float: right;">Rp {kembalian:,}</span></p>
-                <p style="color: #212529;">------------------------------------------</p>
-                <p style="text-align: center; font-size: 12px; margin-bottom: 0; color: #212529;">Semoga Selamat Sampai Tujuan<br>~ Terima Kasih ~</p>
-            </div>
-        """
-        st.markdown(struk_html, unsafe_allowed_html=True)
-        
+        # Menggunakan st.container ber-border biar mirip kotak kertas struk
+        with st.container(border=True):
+            st.markdown("<h3 style='text-align: center;'>📄 STRUK PARKIR DIGITAL</h3>", unsafe_allowed_html=True)
+            st.markdown("<p style='text-align: center; color: gray;'>Perusahaan Parkir XYZ</p>", unsafe_allowed_html=True)
+            st.markdown("---")
+            
+            # Tampilan data memakai text bawaan yang rapi
+            st.write(f"👤 **Nama Pemilik** : {nama}")
+            st.write(f"🔢 **No. Polisi** : {nopol}")
+            st.write(f"🔠 **Kode / Jenis** : {kode.upper()} / {jenis}")
+            st.write(f"⏱️ **Durasi Parkir** : {durasi} Jam")
+            st.markdown("---")
+            
+            st.write(f"💵 **Biaya Parkir** : Rp {biaya_parkir:,}")
+            st.write(f"⚠️ **Denda Tiket** : Rp {denda:,}")
+            st.markdown("---")
+            
+            # Menampilkan Total, Bayar, Kembali dengan widget Metric yang modern
+            m1, m2, m3 = st.columns(3)
+            m1.metric("TOTAL BAYAR", f"Rp {total_bayar:,}")
+            m2.metric("UANG BAYAR", f"Rp {byr:,}")
+            m3.metric("KEMBALIAN", f"Rp {kembalian:,}")
+            
+            st.markdown("---")
+            st.success("✨ Semoga Selamat Sampai Tujuan ~ Terima Kasih ✨")
+            
+        # Peringatan kalau uangnya kurang
         if kembalian < 0:
-            st.warning("⚠️ Uang bayar kurang bos!")
+            st.error("🚨 Uang yang dimasukkan kurang, bos!")
         else:
-            st.balloons()
+            st.balloons() # Efek animasi sukses
     else:
-        st.markdown("""
-            <div style="border: 2px dashed #2e3d52; border-radius: 10px; padding: 50px; text-align: center; color: #64748b; margin-top: 50px;">
-                🖨️ Silakan isi data di sebelah kiri lalu klik "Hitung & Cetak Struk" untuk memunculkan nota pembayaran.
-            </div>
-        """, unsafe_allowed_html=True)
+        st.info("🖨️ Silakan isi data di sebelah kiri lalu klik tombol untuk memunculkan nota di sini.")
