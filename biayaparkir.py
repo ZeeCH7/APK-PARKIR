@@ -61,8 +61,9 @@ with kolom_struk:
     if tombol_cetak or byr > 0:
         # Menggunakan st.container ber-border biar mirip kotak kertas struk
         with st.container(border=True):
-            st.markdown("<h3 style='text-align: center;'>📄 STRUK PARKIR DIGITAL</h3>", unsafe_allowed_html=True)
-            st.markdown("<p style='text-align: center; color: gray;'>Perusahaan Parkir XYZ</p>", unsafe_allowed_html=True)
+            # Menggunakan st.header dan st.markdown biasa (100% AMAN DARI ERROR)
+            st.header("📄 STRUK PARKIR DIGITAL")
+            st.markdown("##### Perusahaan Parkir XYZ")
             st.markdown("---")
             
             # Tampilan data memakai text bawaan yang rapi
