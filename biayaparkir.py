@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="XYZ Parkir — Kalkulator Biaya", layout="wide")
 
 # --- 2. HEADER APLIKASI ---
-st.title("🔵 PERUSAHAAN PARKIR XYZ")
+st.title("🔵 APK PARKIR")
 st.subheader("Sistem Perhitungan Parkir Otomatis")
 st.write("Masukkan data transaksi kendaraan untuk menghitung biaya parkir, denda, dan kembalian secara otomatis.")
 st.markdown("---")
